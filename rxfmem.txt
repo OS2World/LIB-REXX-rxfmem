@@ -1,0 +1,35 @@
+This REXX extension DLL returns the system's free memory, either physical 
+or virtual.  The returned string will be an integer from 524288 to 
+4294967295. 
+
+For whatever reason, OS/2 doesn't return less than 512K free memory 
+(perhaps it actually keeps that much free as a buffer).
+
+To use, put this in your REXX script:
+
+call RxFuncAdd 'RxFreeMem','RxFMem','RxFreeMem'
+
+You may then call RxFreeMem().
+
+The function takes either one argument, or no argument.  
+
+The valid arguments are 'Virtual' and 'Physical', case-insensitive.  The 
+first letter alone is also sufficient.
+
+The default if no argument is given is to return physical memory.
+
+Examples:
+
+say 'Physical memory free: '||RxFreeMem()
+say 'Virtual memory free: '||RxFreeMem('v')
+say 'Physical memory free: '||RxFreeMem('Physical')
+
+Non-valid arguments will cause a syntax error.
+
+Free physical memory is determined by the Dos16MemAvail() API call (which 
+is undocumented, and not declared in VACPP's headers, strangely enough).
+
+Free virtual memory is determined by a DosQuerySysInfo() API call, using 
+the QSV_TOTAVAILMEM identifier.
+
+The source and module definition file are in the source.zip archive.
